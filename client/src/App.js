@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import "./App.css";
-import { Container, AppBar, Typography, Grid, Grow } from "@material-ui/core";
+import {
+  Container,
+  AppBar,
+  Typography,
+  Grid,
+  Grow,
+  Toolbar,
+} from "@material-ui/core";
 
 import PostForm from "./components/PostForm";
 import Posts from "./components/Posts/Posts";
@@ -17,15 +24,28 @@ function App() {
   }, []);
   return (
     <Container maxWidth="lg">
-      <AppBar className={classes.appBar} position="static" color="inherit">
-        <Typography variant="h2" align="center" className={classes.heading}>
-          Fond Memories
-        </Typography>
-        <img src={memory} alt="memory" className={classes.image} height="60" />
+      <AppBar
+        className={classes.appBar}
+        position="static"
+        padding={3}
+        color="inherit"
+      >
+        <Toolbar>
+          <Typography variant="h4" align="left" className={classes.heading}>
+            Fond Memories
+          </Typography>
+          <img
+            src={memory}
+            alt="memory"
+            className={classes.image}
+            height="60"
+          />
+        </Toolbar>
       </AppBar>
       <Grow in>
         <Container>
           <Grid
+            className={classes.mainContainer}
             container
             justify="space-between"
             alignItems="stretch"
