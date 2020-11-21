@@ -4,18 +4,19 @@ const initState = {
   posts: null,
   loading: false,
   creating: false,
+  errors: null,
 };
 
 const postReducer = (state = initState, action) => {
   switch (action.type) {
     case actionType.GET_POSTS:
-      return { ...state, loading: true };
+      return { ...state, loading: true, errors: null };
 
     case actionType.GET_POSTS_SUCCESS:
-      return { ...state, posts: action.posts, loading: false };
+      return { ...state, posts: action.posts, loading: false, errors: null };
 
     case actionType.CREATE_POST:
-      return { ...state, creating: true };
+      return { ...state, creating: true, errors: null };
 
     case actionType.CREATE_POST_SUCCESS:
       const tempPosts = [...state.posts];
@@ -23,6 +24,14 @@ const postReducer = (state = initState, action) => {
       return {
         ...state,
         posts: tempPosts,
+        creating: false,
+        errors: null,
+      };
+
+    case actionType.CREATE_POST_FAIL:
+      return {
+        ...state,
+        errors: action.errors,
         creating: false,
       };
 
@@ -37,6 +46,13 @@ const postReducer = (state = initState, action) => {
       return {
         ...state,
         posts: postsClone,
+        creating: false,
+      };
+
+    case actionType.UPDATE_FAIL:
+      return {
+        ...state,
+        errors: action.errors,
         creating: false,
       };
 

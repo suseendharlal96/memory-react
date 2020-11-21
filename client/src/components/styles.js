@@ -1,37 +1,25 @@
-import { makeStyles } from "@material-ui/core/styles";
-import { green } from "@material-ui/core/colors";
+import { makeStyles } from "@material-ui/core";
 
-export default makeStyles((theme) => ({
-  root: {
-    "& .MuiTextField-root": {
-      margin: theme.spacing(1),
-    },
-  },
-  paper: {
-    padding: theme.spacing(2),
-  },
-  form: {
+export default makeStyles(() => ({
+  appBar: {
+    borderRadius: 15,
+    margin: "30px 0",
     display: "flex",
-    flexWrap: "wrap",
+    flexDirection: "row",
     justifyContent: "center",
+    alignItems: "center",
   },
-  fileInput: {
-    width: "97%",
-    margin: "10px 0",
+  toolbar: {
+    display: "flex",
+    width: "100%",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
-  buttonSubmit: {
-    marginBottom: 10,
+  heading: {
+    color: "rgba(0,183,255, 1)",
+    cursor: "pointer",
   },
-  wrapper: {
-    margin: theme.spacing(1),
-    position: "relative",
-  },
-  buttonProgress: {
-    color: green[500],
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    marginTop: -12,
-    marginLeft: -12,
+  image: {
+    marginLeft: "15px",
   },
 }));

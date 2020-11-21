@@ -10,17 +10,19 @@ import {
 import FileBase from "react-file-base64";
 
 import useSusee from "./styles";
-import * as action from "../store/actions/index";
+import * as action from "../../store/actions/index";
 const PostForm = ({ editId, setEditId }) => {
   const classes = useSusee();
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.postReducer.creating);
   const posts = useSelector((state) => state.postReducer.posts);
+  const errors = useSelector((state) => state.postReducer.errors);
   const editPost = editId
     ? posts && posts.length && posts.find((post) => post._id === editId)
     : null;
   const [postData, setPostData] = useState({
     title: "",
+    name: "",
     creator: "",
     message: "",
     tags: "",
@@ -32,7 +34,7 @@ const PostForm = ({ editId, setEditId }) => {
     }
   }, [editId]);
   const clear = () => {
-    setPostData({ title: "", creator: "", message: "", tags: "", image: "" });
+    setPostData({ title: "", name: "", message: "", tags: "", image: "" });
     setEditId(null);
   };
   const handleSubmit = (e) => {
@@ -40,7 +42,7 @@ const PostForm = ({ editId, setEditId }) => {
     editPost
       ? dispatch(action.updatePost(editId, postData))
       : dispatch(action.createPost(postData));
-    clear();
+    // clear();
   };
   return (
     <Paper className={classes.paper}>
@@ -54,20 +56,22 @@ const PostForm = ({ editId, setEditId }) => {
           {editPost ? `Edit "${postData.title}"` : "Create your Memory"}
         </Typography>
         <TextField
-          name="creator"
+          name="title"
           variant="outlined"
           label="Creator"
           fullWidth
-          value={postData.creator}
-          onChange={(e) =>
-            setPostData({ ...postData, creator: e.target.value })
-          }
+          error={errors && errors.name ? true : false}
+          helperText={errors && errors.name ? errors?.name : null}
+          value={postData.name}
+          onChange={(e) => setPostData({ ...postData, name: e.target.value })}
         />
         <TextField
           name="title"
           variant="outlined"
-          label="Title"
+          label="Memory Title"
           fullWidth
+          error={errors && errors.title ? true : false}
+          helperText={errors && errors.title ? errors?.title : null}
           value={postData.title}
           onChange={(e) => setPostData({ ...postData, title: e.target.value })}
         />
@@ -79,6 +83,8 @@ const PostForm = ({ editId, setEditId }) => {
           multiline
           rows={4}
           value={postData.message}
+          error={errors && errors.message ? true : false}
+          helperText={errors && errors.message ? errors?.message : null}
           onChange={(e) =>
             setPostData({ ...postData, message: e.target.value })
           }
@@ -89,6 +95,8 @@ const PostForm = ({ editId, setEditId }) => {
           label="Tags (coma separated)"
           fullWidth
           value={postData.tags}
+          error={errors && errors.tags ? true : false}
+          helperText={errors && errors.tags ? errors?.tags : null}
           onChange={(e) =>
             setPostData({ ...postData, tags: e.target.value.split(",") })
           }
@@ -106,6 +114,11 @@ const PostForm = ({ editId, setEditId }) => {
               height="100px"
               width="100px"
             />
+          )}
+          {errors && errors?.image && (
+            <Typography align="center" color="secondary">
+              {errors && errors?.image}
+            </Typography>
           )}
         </div>
         <div className={classes.wrapper}>

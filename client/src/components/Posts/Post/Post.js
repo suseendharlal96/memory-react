@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Card,
   CardMedia,
@@ -21,6 +21,7 @@ import * as action from "../../../store/actions/index";
 const Post = ({ post, setEditId }) => {
   dayjs.extend(relativeTime);
   const dispatch = useDispatch();
+  const authData = useSelector((state) => state.authReducer?.authData?.result);
   const classes = useSusee();
   return (
     <Card className={classes.card}>
@@ -33,20 +34,22 @@ const Post = ({ post, setEditId }) => {
         title={post.title}
       />
       <div className={classes.overlay}>
-        <Typography variant="h6">{post.creator}</Typography>
+        <Typography variant="h6">{post.name}</Typography>
         <Typography variant="body2">
           {dayjs(post.createdAt).fromNow()}
         </Typography>
       </div>
-      <div className={classes.overlay2}>
-        <Button
-          onClick={() => setEditId(post._id)}
-          style={{ color: "white" }}
-          size="small"
-        >
-          <MoreHorizIcon fontSize="default" />
-        </Button>
-      </div>
+      {authData && authData._id === post.creator && (
+        <div className={classes.overlay2}>
+          <Button
+            onClick={() => setEditId(post._id)}
+            style={{ color: "white" }}
+            size="small"
+          >
+            <MoreHorizIcon fontSize="default" />
+          </Button>
+        </div>
+      )}
       <div className={classes.details}>
         <Typography variant="body2" color="textSecondary" component="h2">
           {post.tags.map((tag) => (
@@ -70,20 +73,27 @@ const Post = ({ post, setEditId }) => {
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Button
-          size="small"
-          color="primary"
-          onClick={() => dispatch(action.likePost(post._id))}
-        >
-          <ThumbUpAltIcon fontSize="small" /> Like {post.likes}{" "}
-        </Button>
-        <Button
-          size="small"
-          color="primary"
-          onClick={() => dispatch(action.deletePost(post._id))}
-        >
-          <DeleteIcon fontSize="small" /> Delete
-        </Button>
+        {authData && (
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => dispatch(action.likePost(post._id))}
+          >
+            <ThumbUpAltIcon fontSize="small" />
+            {post.likes.length > 1
+              ? `${post.likes.length}likes`
+              : `${post.likes.length}like`}
+          </Button>
+        )}
+        {authData && authData._id === post.creator && (
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => dispatch(action.deletePost(post._id))}
+          >
+            <DeleteIcon fontSize="small" /> Delete
+          </Button>
+        )}
       </CardActions>
     </Card>
   );
