@@ -24,7 +24,6 @@ const authReducer = (state = initState, action) => {
       };
 
     case actionType.AUTH_FAIL:
-      console.log(action);
       return {
         ...state,
         authData: null,

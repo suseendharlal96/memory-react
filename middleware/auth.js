@@ -7,9 +7,7 @@ const auth = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedData = jwt.verify(token, process.env.SECRET);
     if (decodedData) {
-        console.log(decodedData)
       req.userId = decodedData.id;
-    //   console.log(req.userId);
     }
     next();
   } catch (err) {   

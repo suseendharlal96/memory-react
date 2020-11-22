@@ -12,7 +12,6 @@ export const getPosts = () => async (dispatch) => {
 };
 
 export const createPost = (formData) => async (dispatch) => {
-  console.log(formData);
   dispatch({ type: actionType.CREATE_POST });
   try {
     const { data: post } = await axiosClient.post(
@@ -26,10 +25,8 @@ export const createPost = (formData) => async (dispatch) => {
         },
       }
     );
-    console.log(post);
     dispatch({ type: actionType.CREATE_POST_SUCCESS, post });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: actionType.CREATE_POST_FAIL,
       errors: error?.response?.data,
@@ -53,7 +50,6 @@ export const updatePost = (id, formData) => async (dispatch) => {
     );
     dispatch({ type: actionType.UPDATE_SUCCESS, updatedPost });
   } catch (error) {
-    console.log(error);
     dispatch({ type: actionType.UPDATE_FAIL, errors: error?.response?.data });
   }
 };
@@ -69,7 +65,6 @@ export const deletePost = (id) => async (dispatch) => {
     });
     dispatch({ type: actionType.DELETE_SUCCESS, id });
   } catch (error) {
-    console.log(error);
   }
 };
 
@@ -77,7 +72,6 @@ export const likePost = (id) => async (dispatch) => {
   const token = localStorage.getItem("token")
     ? localStorage.getItem("token")
     : null;
-  console.log(token);
   try {
     const { data: updatedPost } = await axiosClient.patch(
       `/posts/likePost/${id}`,

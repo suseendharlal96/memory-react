@@ -8,9 +8,6 @@ import useSusee from "./styles";
 const Posts = ({ setEditId }) => {
   const classes = useSusee();
   const postData = useSelector((state) => state.postReducer);
-  // const posts = useSelector((state) => state.postReducer);
-  console.log(postData);
-  // return <h3>posts</h3>;
   return postData.loading ? (
     <CircularProgress />
   ) : postData.posts && postData.posts.length > 0 ? (

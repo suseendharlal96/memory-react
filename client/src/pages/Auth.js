@@ -24,7 +24,6 @@ const Auth = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.authReducer.loading);
   const errors = useSelector((state) => state.authReducer.errors);
-  console.log(errors);
   const [form, setForm] = useState({
     email: "",
     password: "",
