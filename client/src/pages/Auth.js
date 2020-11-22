@@ -62,12 +62,13 @@ const Auth = () => {
         {isSignup ? "Signup" : "Signin"}
       </Typography>
       <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel htmlFor="emaio">Email</InputLabel>
+        <InputLabel required htmlFor="emaio">
+          Email
+        </InputLabel>
         <OutlinedInput
           placeholder="JohnDoe@email.com"
           id="email"
           name="Email"
-          required
           variant="outlined"
           error={
             errors && errors?.email
@@ -78,16 +79,26 @@ const Auth = () => {
           }
           label="Email"
           value={form.email}
-          helperText={errors && errors?.email && errors?.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
+        {errors && errors?.email && errors?.email && (
+          <Typography
+            variant="caption"
+            color="secondary"
+            display="block"
+            gutterBottom
+          >
+            {errors && errors?.email && errors?.email}
+          </Typography>
+        )}
       </FormControl>
       <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel htmlFor="password">Password</InputLabel>
+        <InputLabel required htmlFor="password">
+          Password
+        </InputLabel>
         <OutlinedInput
           id="password"
           name="Password"
-          required
           variant="outlined"
           label="Password"
           type={isShowPassword ? "text" : "password"}
@@ -110,18 +121,28 @@ const Auth = () => {
               : false
           }
           value={form.password}
-          helperText={errors && errors?.password && errors?.password}
           onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
+        {errors && errors?.password && errors?.password && (
+          <Typography
+            variant="caption"
+            color="secondary"
+            display="block"
+            gutterBottom
+          >
+            {errors && errors?.password && errors?.password}
+          </Typography>
+        )}
       </FormControl>
       {isSignup && (
         <>
           <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel htmlFor="confirmpassword">Confirm Password</InputLabel>
+            <InputLabel required htmlFor="confirmpassword">
+              Confirm Password
+            </InputLabel>
             <OutlinedInput
               id="confirmpassword"
               name="confirmpassword"
-              required
               variant="outlined"
               label="Confirm Password"
               type="password"
@@ -133,13 +154,20 @@ const Auth = () => {
                   ? true
                   : false
               }
-              helperText={
-                errors && errors?.confirmPassword && errors?.confirmPassword
-              }
               onChange={(e) =>
                 setForm({ ...form, confirmPassword: e.target.value })
               }
             />
+            {errors && errors?.confirmPassword && errors?.confirmPassword && (
+              <Typography
+                variant="caption"
+                color="secondary"
+                display="block"
+                gutterBottom
+              >
+                {errors && errors?.confirmPassword && errors?.confirmPassword}
+              </Typography>
+            )}
           </FormControl>
           <div className={classes.fileInput}>
             <Typography>Profile pic</Typography>

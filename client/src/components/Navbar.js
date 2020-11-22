@@ -31,7 +31,7 @@ const Navbar = () => {
           align="left"
           className={classes.heading}
         >
-          💖 Memories
+          💖Memories💭
         </Typography>
         {/* <img src={memory} alt="memory" className={classes.image} height="60" /> */}
         {authData ? (
