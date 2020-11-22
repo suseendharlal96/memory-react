@@ -20,7 +20,7 @@ const postReducer = (state = initState, action) => {
 
     case actionType.CREATE_POST_SUCCESS:
       const tempPosts = [...state.posts];
-      tempPosts.push(action.post);
+      tempPosts.unshift(action.post);
       return {
         ...state,
         posts: tempPosts,

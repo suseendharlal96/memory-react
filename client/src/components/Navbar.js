@@ -13,6 +13,10 @@ const Navbar = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const authData = useSelector((state) => state.authReducer?.authData?.result);
+  const logout = () => {
+    dispatch({ type: actionType.LOGOUT });
+    history.push("/auth");
+  };
   return (
     <AppBar
       className={classes.appBar}
@@ -23,24 +27,21 @@ const Navbar = () => {
       <Toolbar className={classes.toolbar}>
         <Typography
           onClick={() => history.push("/")}
-          variant="h4"
+          variant="h6"
           align="left"
           className={classes.heading}
         >
-          Fond Memories
+          💖 Memories
         </Typography>
-        <img src={memory} alt="memory" className={classes.image} height="60" />
+        {/* <img src={memory} alt="memory" className={classes.image} height="60" /> */}
         {authData ? (
           <>
             <Avatar
               alt={authData.email}
               src={authData.profile ? authData.profile : defaultProfile}
             />
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => dispatch({ type: actionType.LOGOUT })}
-            >
+            <Typography align="right">{authData.email}</Typography>
+            <Button variant="contained" className={classes.logout} color="secondary" onClick={logout}>
               Logout
             </Button>
           </>

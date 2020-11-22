@@ -74,14 +74,17 @@ export const deletePost = (id) => async (dispatch) => {
 };
 
 export const likePost = (id) => async (dispatch) => {
+  const token = localStorage.getItem("token")
+    ? localStorage.getItem("token")
+    : null;
+  console.log(token);
   try {
     const { data: updatedPost } = await axiosClient.patch(
       `/posts/likePost/${id}`,
+      null,
       {
         headers: {
-          Authorization: `Bearer ${
-            localStorage.getItem("token") ? localStorage.getItem("token") : null
-          }`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );

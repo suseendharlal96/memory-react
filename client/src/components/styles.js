@@ -7,13 +7,16 @@ export default makeStyles(() => ({
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
+    flexWrap: "wrap",
     alignItems: "center",
   },
   toolbar: {
     display: "flex",
     width: "100%",
+    flexWrap: "wrap",
     justifyContent: "space-around",
     alignItems: "center",
+    padding: "0.5rem",
   },
   heading: {
     color: "rgba(0,183,255, 1)",
@@ -21,5 +24,8 @@ export default makeStyles(() => ({
   },
   image: {
     marginLeft: "15px",
+  },
+  logout: {
+    padding: "0.3rem",
   },
 }));

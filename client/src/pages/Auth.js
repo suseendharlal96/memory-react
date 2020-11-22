@@ -3,10 +3,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import {
   Typography,
-  TextField,
+  InputLabel,
+  FormControl,
   Button,
   CircularProgress,
+  InputAdornment,
+  IconButton,
+  OutlinedInput,
 } from "@material-ui/core";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import FileBase from "react-file-base64";
 
 import useSusee from "./authStyle";
@@ -26,6 +32,7 @@ const Auth = () => {
     profile: "",
   });
   const [isSignup, setIsSignup] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(false);
   const changeMode = () => {
     setIsSignup((prevState) => !prevState);
     setForm({ ...form, profile: "", confirmPassword: "" });
@@ -35,12 +42,9 @@ const Auth = () => {
     isSignup
       ? dispatch(action.signup(form, history))
       : dispatch(action.signin(form, history));
-    // setForm({
-    //   email: "",
-    //   password: "",
-    //   confirmPassword: "",
-    //   profile: "",
-    // });
+  };
+  const handleClickShowPassword = () => {
+    setIsShowPassword((prevState) => !prevState);
   };
   return (
     <form
@@ -57,69 +61,86 @@ const Auth = () => {
       <Typography align="center" variant="h6">
         {isSignup ? "Signup" : "Signin"}
       </Typography>
-      <TextField
-        name="Email"
-        variant="outlined"
-        error={
-          errors && errors?.email
-            ? true
-            : false || (errors && errors?.message)
-            ? true
-            : false
-        }
-        label="Email"
-        value={form.email}
-        helperText={errors && errors?.email && errors?.email}
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
-      />
-      <TextField
-        name="Password"
-        variant="outlined"
-        label="Password"
-        type="password"
-        error={
-          errors && errors?.password
-            ? true
-            : false || (errors && errors?.message)
-            ? true
-            : false
-        }
-        value={form.password}
-        helperText={errors && errors?.password && errors?.password}
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
-      />
-      {/* {errors && errors?.password && (
-        <Typography color="error" align="center" variant="h6">
-          {errors?.password}
-        </Typography>
-      )} */}
+      <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel htmlFor="emaio">Email</InputLabel>
+        <OutlinedInput
+          placeholder="JohnDoe@email.com"
+          id="email"
+          name="Email"
+          required
+          variant="outlined"
+          error={
+            errors && errors?.email
+              ? true
+              : false || (errors && errors?.message)
+              ? true
+              : false
+          }
+          label="Email"
+          value={form.email}
+          helperText={errors && errors?.email && errors?.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+        />
+      </FormControl>
+      <FormControl variant="outlined" className={classes.formControl}>
+        <InputLabel htmlFor="password">Password</InputLabel>
+        <OutlinedInput
+          id="password"
+          name="Password"
+          required
+          variant="outlined"
+          label="Password"
+          type={isShowPassword ? "text" : "password"}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                edge="end"
+              >
+                {isShowPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+          }
+          error={
+            errors && errors?.password
+              ? true
+              : false || (errors && errors?.message)
+              ? true
+              : false
+          }
+          value={form.password}
+          helperText={errors && errors?.password && errors?.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+        />
+      </FormControl>
       {isSignup && (
         <>
-          <TextField
-            name="confirmpassword"
-            variant="outlined"
-            label="Confirm Password"
-            type="password"
-            value={form.confirmPassword}
-            error={
-              errors && errors?.confirmPassword
-                ? true
-                : false || (errors && errors?.message)
-                ? true
-                : false
-            }
-            helperText={
-              errors && errors?.confirmPassword && errors?.confirmPassword
-            }
-            onChange={(e) =>
-              setForm({ ...form, confirmPassword: e.target.value })
-            }
-          />
-          {/* {errors && errors?.confirmPassword && (
-            <Typography color="error" align="center" variant="h6">
-              {errors?.confirmPassword}
-            </Typography>
-          )} */}
+          <FormControl variant="outlined" className={classes.formControl}>
+            <InputLabel htmlFor="confirmpassword">Confirm Password</InputLabel>
+            <OutlinedInput
+              id="confirmpassword"
+              name="confirmpassword"
+              required
+              variant="outlined"
+              label="Confirm Password"
+              type="password"
+              value={form.confirmPassword}
+              error={
+                errors && errors?.confirmPassword
+                  ? true
+                  : false || (errors && errors?.message)
+                  ? true
+                  : false
+              }
+              helperText={
+                errors && errors?.confirmPassword && errors?.confirmPassword
+              }
+              onChange={(e) =>
+                setForm({ ...form, confirmPassword: e.target.value })
+              }
+            />
+          </FormControl>
           <div className={classes.fileInput}>
             <Typography>Profile pic</Typography>
             <FileBase
@@ -161,7 +182,7 @@ const Auth = () => {
         onClick={changeMode}
         disabled={loading}
       >
-        Switch to {isSignup ? "Signin" : "Signup"}
+        {isSignup ? "Have an account?" : "New user?"}
       </Button>
     </form>
   );

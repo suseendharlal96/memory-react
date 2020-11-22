@@ -8,6 +8,7 @@ import {
   CardActions,
   CardContent,
 } from "@material-ui/core";
+import ThumbUpAltOutlined from "@material-ui/icons/ThumbUpAltOutlined";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import DeleteIcon from "@material-ui/icons/Delete";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
@@ -73,17 +74,44 @@ const Post = ({ post, setEditId }) => {
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        {authData && (
+        {authData ? (
           <Button
             size="small"
             color="primary"
             onClick={() => dispatch(action.likePost(post._id))}
           >
-            <ThumbUpAltIcon fontSize="small" />
-            {post.likes.length > 1
-              ? `${post.likes.length}likes`
-              : `${post.likes.length}like`}
+            {post.likes.length > 0 ? (
+              post.likes.find((like) => like === authData._id) ? (
+                <>
+                  <ThumbUpAltIcon fontSize="small" />
+                  You and
+                  {post.likes.length > 2
+                    ? ` ${post.likes.length - 1} others liked`
+                    : ` ${post.likes.length - 1} other liked`}
+                </>
+              ) : (
+                <>
+                  <ThumbUpAltOutlined fontSize="small" />
+                  {post.likes.length > 1
+                    ? `${post.likes.length} likes`
+                    : `${post.likes.length} like`}
+                </>
+              )
+            ) : (
+              <>
+                <ThumbUpAltOutlined fontSize="small" />
+                Like
+              </>
+            )}
           </Button>
+        ) : (
+          <>
+            {post.likes.length > 0
+              ? post.likes.length > 1
+                ? `${post.likes.length} likes`
+                : `${post.likes.length} like`
+              : `${post.likes.length} like`}
+          </>
         )}
         {authData && authData._id === post.creator && (
           <Button

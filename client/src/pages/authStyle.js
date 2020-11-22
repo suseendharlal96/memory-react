@@ -7,6 +7,9 @@ export default makeStyles((theme) => ({
       margin: theme.spacing(1),
     },
   },
+  formControl: {
+    marginBottom: "15px",
+  },
   form: {
     display: "flex",
     flexWrap: "wrap",
@@ -14,6 +17,11 @@ export default makeStyles((theme) => ({
     justifyContent: "center",
     width: "50%",
     margin: "0 auto",
+  },
+  [theme.breakpoints.down("sm")]: {
+    form: {
+      width: "100%",
+    },
   },
   fileInput: {
     width: "50%",

@@ -87,15 +87,24 @@ export const deletePost = async (req, res) => {
 };
 
 export const likePost = async (req, res) => {
+  if (!req.userId) {
+    return res.status(400).json({ message: "Unauthenticated" });
+  }
   const { id } = req.params;
   const post = await PostModal.findById(id);
-  const updatedPost = await PostModal.findByIdAndUpdate(
-    id,
-    {
-      likes: post.likes + 1,
-    },
-    { new: true }
-  );
+  if (!post) {
+    return res.status(400).json({ message: "Post not found" });
+  }
+  const index = post.likes.findIndex((id) => id === req.userId);
+  if (index === -1) {
+    post.likes.push(req.userId);
+  } else {
+    post.likes = post.likes.filter((id) => id !== req.userId);
+  }
+  // console.log("post", post);
+  const updatedPost = await PostModal.findByIdAndUpdate(id, post, {
+    new: true,
+  });
   res.json(updatedPost);
   try {
   } catch (error) {
