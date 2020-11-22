@@ -55,8 +55,14 @@ const PostForm = ({ editId, setEditId }) => {
         <Typography variant="h6">
           {editPost ? `Edit "${postData.title}"` : "Create your Memory"}
         </Typography>
+        {errors && errors?.message && (
+          <Typography color="error" align="center" variant="h6">
+            {errors?.message}
+          </Typography>
+        )}
         <TextField
           name="title"
+          required
           variant="outlined"
           label="Creator"
           fullWidth
@@ -67,6 +73,7 @@ const PostForm = ({ editId, setEditId }) => {
         />
         <TextField
           name="title"
+          required
           variant="outlined"
           label="Memory Title"
           fullWidth
@@ -77,20 +84,22 @@ const PostForm = ({ editId, setEditId }) => {
         />
         <TextField
           name="message"
+          required
           variant="outlined"
           label="Message"
           fullWidth
           multiline
           rows={4}
           value={postData.message}
-          error={errors && errors.message ? true : false}
-          helperText={errors && errors.message ? errors?.message : null}
+          error={errors && errors.messages ? true : false}
+          helperText={errors && errors.messages ? errors?.messages : null}
           onChange={(e) =>
             setPostData({ ...postData, message: e.target.value })
           }
         />
         <TextField
           name="tags"
+          required
           variant="outlined"
           label="Tags (coma separated)"
           fullWidth
@@ -102,6 +111,7 @@ const PostForm = ({ editId, setEditId }) => {
           }
         />
         <div className={classes.fileInput}>
+          <Typography>Snapshot *</Typography>
           <FileBase
             type="file"
             multiple={false}

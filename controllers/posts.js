@@ -49,14 +49,15 @@ export const updatePost = async (req, res) => {
     return res.status(400).json({ title: "Required" });
   }
   if (body.message.trim() === "") {
-    return res.status(400).json({ message: "Required" });
+    return res.status(400).json({ messages: "Required" });
   }
   if (body.tags.length === 0) {
     return res.status(400).json({ tags: "Required" });
   }
   try {
-    const post = await PostModal.find({ _id: id });
-    if (post.creator != req.userId) {
+    const post = await PostModal.findOne({ _id });
+    console.log(post.creator);
+    if (post.creator !== req.userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
     const updatedPost = await PostModal.findByIdAndUpdate(_id, body, {
