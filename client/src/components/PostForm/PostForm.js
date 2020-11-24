@@ -17,6 +17,7 @@ const PostForm = ({ editId, setEditId }) => {
   const loading = useSelector((state) => state.postReducer.creating);
   const posts = useSelector((state) => state.postReducer.posts);
   const errors = useSelector((state) => state.postReducer.errors);
+  const authData = useSelector((state) => state.authReducer?.authData?.result);
   const editPost = editId
     ? posts && posts.length && posts.find((post) => post._id === editId)
     : null;
@@ -33,15 +34,20 @@ const PostForm = ({ editId, setEditId }) => {
       setPostData(editPost);
     }
   }, [editId]);
+  useEffect(() => {
+    clear();
+  }, [posts]);
   const clear = () => {
     setPostData({ title: "", name: "", message: "", tags: "", image: "" });
     setEditId(null);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    let data = {};
+    data = authData.imageUrl ? { ...postData, sub: authData.sub } : postData;
     editPost
-      ? dispatch(action.updatePost(editId, postData))
-      : dispatch(action.createPost(postData));
+      ? dispatch(action.updatePost(editId, data))
+      : dispatch(action.createPost(data));
     // clear();
   };
   return (

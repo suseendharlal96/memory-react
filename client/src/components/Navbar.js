@@ -5,7 +5,6 @@ import { AppBar, Toolbar, Typography, Button, Avatar } from "@material-ui/core";
 
 import useSusee from "./styles";
 import * as actionType from "../store/actions/actionType";
-import memory from "../images/memory.jpg";
 import defaultProfile from "../images/default.jpg";
 
 const Navbar = () => {
@@ -37,11 +36,22 @@ const Navbar = () => {
         {authData ? (
           <>
             <Avatar
-              alt={authData.email}
-              src={authData.profile ? authData.profile : defaultProfile}
+              alt={authData.name ? authData.name : authData.email}
+              src={
+                authData.imageUrl
+                  ? authData.imageUrl
+                  : authData.profile
+                  ? authData.profile
+                  : defaultProfile
+              }
             />
-            <Typography align="right">{authData.email}</Typography>
-            <Button variant="contained" className={classes.logout} color="secondary" onClick={logout}>
+            <Typography align="right">{authData.name ? authData.name : authData.email}</Typography>
+            <Button
+              variant="contained"
+              className={classes.logout}
+              color="secondary"
+              onClick={logout}
+            >
               Logout
             </Button>
           </>

@@ -13,7 +13,9 @@ const postReducer = (state = initState, action) => {
       return { ...state, loading: true, errors: null };
 
     case actionType.GET_POSTS_SUCCESS:
-      return { ...state, posts: action.posts, loading: false, errors: null };
+      // const actualPosts = [...state.posts];
+      // actualPosts.unshift(action.posts);
+      return { ...state, posts: action.posts.reverse(), loading: false, errors: null };
 
     case actionType.CREATE_POST:
       return { ...state, creating: true, errors: null };

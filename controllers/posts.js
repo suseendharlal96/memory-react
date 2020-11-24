@@ -11,8 +11,10 @@ export const getPosts = async (req, res) => {
 };
 
 export const createPost = async (req, res) => {
-  if (!req.userId) {
-    res.json({ message: "Unauthenticated" });
+  if (!req.body.sub) {
+    if (!req.userId) {
+      return res.json({ message: "Unauthenticated" });
+    }
   }
   const post = req.body;
   if (post.name.trim() === "") {
@@ -29,7 +31,7 @@ export const createPost = async (req, res) => {
   try {
     const newPost = await PostModal.create({
       ...post,
-      creator: req.userId,
+      creator: req.body.sub ? req.body.sub : req.userId,
       createdAt: new Date().toISOString(),
     });
     res.status(201).send(newPost);
@@ -40,8 +42,10 @@ export const createPost = async (req, res) => {
 };
 
 export const updatePost = async (req, res) => {
-  if (!req.userId) {
-    res.json({ message: "Unauthenticated" });
+  if (!req.body.sub) {
+    if (!req.userId) {
+      return res.json({ message: "Unauthenticated" });
+    }
   }
   const { id: _id } = req.params;
   const body = req.body;
@@ -56,9 +60,14 @@ export const updatePost = async (req, res) => {
   }
   try {
     const post = await PostModal.findOne({ _id });
-    console.log(post.creator);
-    if (post.creator !== req.userId) {
-      return res.status(401).json({ message: "Unauthorized" });
+    if (req.body.sub) {
+      if (post.creator !== req.body.sub) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+    } else {
+      if (post.creator !== req.userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
     }
     const updatedPost = await PostModal.findByIdAndUpdate(_id, body, {
       new: true,
@@ -71,14 +80,22 @@ export const updatePost = async (req, res) => {
 };
 
 export const deletePost = async (req, res) => {
-  if (!req.userId) {
-    res.status(400).json({ message: "Unauthenticated" });
+  if (!req.body.sub) {
+    if (!req.userId) {
+      return res.status(400).json({ message: "Unauthenticated" });
+    }
   }
   const { id } = req.params;
   try {
     const post = await PostModal.findOne({ _id: id });
-    if (post.creator !== req.userId) {
-      return res.status(401).json({ message: "Unauthorized" });
+    if (req.body.sub) {
+      if (post.creator !== req.body.sub) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+    } else {
+      if (post.creator !== req.userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
     }
     await PostModal.findByIdAndDelete(id);
     res.status(200).json({ message: "deleted successfully" });
@@ -88,25 +105,31 @@ export const deletePost = async (req, res) => {
 };
 
 export const likePost = async (req, res) => {
-  if (!req.userId) {
-    return res.status(400).json({ message: "Unauthenticated" });
+  if (!req.body.sub) {
+    if (!req.userId) {
+      return res.status(400).json({ message: "Unauthenticated" });
+    }
   }
   const { id } = req.params;
   const post = await PostModal.findById(id);
   if (!post) {
     return res.status(400).json({ message: "Post not found" });
   }
-  const index = post.likes.findIndex((id) => id === req.userId);
+  let index;
+  index = req.body.sub
+    ? post.likes.findIndex((id) => id === req.body.sub)
+    : post.likes.findIndex((id) => id === req.userId);
   if (index === -1) {
-    post.likes.push(req.userId);
+    req.body.sub ? post.likes.push(req.body.sub) : post.likes.push(req.userId);
   } else {
-    post.likes = post.likes.filter((id) => id !== req.userId);
+    post.likes = post.likes.filter((id) =>
+      id !== req.body.sub ? req.body.sub : req.userId
+    );
   }
-  // console.log("post", post);
   const updatedPost = await PostModal.findByIdAndUpdate(id, post, {
     new: true,
   });
-  res.json(updatedPost);
+  res.status(200).json(updatedPost);
   try {
   } catch (error) {
     res.json({ message: " like failed" });

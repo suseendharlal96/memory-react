@@ -22,7 +22,6 @@ export const signin = async (req, res) => {
     if (!oldUser) {
       return res.status(404).json({ message: "User doesn't exist" });
     }
-    console.log("user", oldUser.id);
     const isPassCorrect = await bcrypt.compare(
       req.body.password,
       oldUser.password
@@ -77,7 +76,6 @@ export const signup = async (req, res) => {
       process.env.SECRET,
       { expiresIn: "1h" }
     );
-    console.log(token);
     res.status(201).json({ result, token });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });

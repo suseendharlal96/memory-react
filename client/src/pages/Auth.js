@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { GoogleLogin } from "react-google-login";
+import axios from "axios";
 import {
   Typography,
   InputLabel,
@@ -16,7 +18,9 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import FileBase from "react-file-base64";
 
 import useSusee from "./authStyle";
+import Icon from "./icon";
 import * as action from "../store/actions/index";
+import * as actionType from "../store/actions/actionType";
 
 const Auth = () => {
   const history = useHistory();
@@ -44,6 +48,29 @@ const Auth = () => {
   };
   const handleClickShowPassword = () => {
     setIsShowPassword((prevState) => !prevState);
+  };
+  const googleSuccess = async (res) => {
+    const data = res && res.profileObj;
+    try {
+      const {
+        data: { sub },
+      } = await axios.get(
+        `https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${res.tokenId}`
+      );
+      const result = { result: { ...data, sub: sub }, token: res.tokenId };
+      dispatch({
+        type: actionType.AUTH_SUCCESS,
+        data: result,
+      });
+      history.push("/");
+    } catch (err) {
+      console.log(err);
+    }
+    // localStorage.setItem("token", res && res.tokenId);
+  };
+  const googleError = (res) => {
+    console.log(res);
+    alert("Google signin was unsuccessful.Try again later");
   };
   return (
     <form
@@ -187,30 +214,49 @@ const Auth = () => {
         </>
       )}
       <div className={classes.wrapper}>
-        <Button
-          className={classes.buttonSubmit}
-          variant="contained"
-          color="primary"
-          size="large"
-          type="submit"
-          fullWidth
-          disabled={loading}
-        >
-          {isSignup ? "Signup" : "Signin"}
-        </Button>
-        {loading && (
-          <CircularProgress size={24} className={classes.buttonProgress} />
-        )}
+        <>
+          <Button
+            variant="contained"
+            color="secondary"
+            size="small"
+            onClick={changeMode}
+            disabled={loading}
+          >
+            {isSignup ? "Have an account?" : "New user?"}
+          </Button>
+          <Button
+            className={classes.buttonSubmit}
+            variant="contained"
+            color="primary"
+            type="submit"
+            // fullWidth
+            disabled={loading}
+          >
+            {isSignup ? "Signup" : "Signin"}
+          </Button>
+          {loading && (
+            <CircularProgress size={24} className={classes.buttonProgress} />
+          )}
+        </>
       </div>
-      <Button
-        variant="contained"
-        color="secondary"
-        size="small"
-        onClick={changeMode}
-        disabled={loading}
-      >
-        {isSignup ? "Have an account?" : "New user?"}
-      </Button>
+      <GoogleLogin
+        clientId={process.env.REACT_APP_CLIENT_ID}
+        buttonText="Signin"
+        render={(renderProps) => (
+          <Button
+            color="primary"
+            onClick={renderProps.onClick}
+            disabled={renderProps.disabled}
+            startIcon={<Icon />}
+            variant="contained"
+          >
+            Google Signin
+          </Button>
+        )}
+        onSuccess={googleSuccess}
+        onFailure={googleError}
+        cookiePolicy={"single_host_origin"}
+      />
     </form>
   );
 };

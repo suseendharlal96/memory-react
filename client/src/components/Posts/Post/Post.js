@@ -40,17 +40,18 @@ const Post = ({ post, setEditId }) => {
           {dayjs(post.createdAt).fromNow()}
         </Typography>
       </div>
-      {authData && authData._id === post.creator && (
-        <div className={classes.overlay2}>
-          <Button
-            onClick={() => setEditId(post._id)}
-            style={{ color: "white" }}
-            size="small"
-          >
-            <MoreHorizIcon fontSize="default" />
-          </Button>
-        </div>
-      )}
+      {authData &&
+        (authData.sub === post.creator || authData._id === post.creator) && (
+          <div className={classes.overlay2}>
+            <Button
+              onClick={() => setEditId(post._id)}
+              style={{ color: "white" }}
+              size="small"
+            >
+              <MoreHorizIcon fontSize="default" />
+            </Button>
+          </div>
+        )}
       <div className={classes.details}>
         <Typography variant="body2" color="textSecondary" component="h2">
           {post.tags.map((tag) => (
@@ -78,10 +79,16 @@ const Post = ({ post, setEditId }) => {
           <Button
             size="small"
             color="primary"
-            onClick={() => dispatch(action.likePost(post._id))}
+            onClick={() =>
+              dispatch(
+                action.likePost(post._id, authData.sub ? authData.sub : null)
+              )
+            }
           >
             {post.likes.length > 0 ? (
-              post.likes.find((like) => like === authData._id) ? (
+              post.likes.find(
+                (like) => like === (authData.sub || authData._id)
+              ) ? (
                 <>
                   <ThumbUpAltIcon fontSize="small" />
                   You and
@@ -113,15 +120,23 @@ const Post = ({ post, setEditId }) => {
               : `${post.likes.length} like`}
           </>
         )}
-        {authData && authData._id === post.creator && (
-          <Button
-            size="small"
-            color="primary"
-            onClick={() => dispatch(action.deletePost(post._id))}
-          >
-            <DeleteIcon fontSize="small" /> Delete
-          </Button>
-        )}
+        {authData &&
+          (authData.sub === post.creator || authData._id === post.creator) && (
+            <Button
+              size="small"
+              color="secondary"
+              onClick={() =>
+                dispatch(
+                  action.deletePost(
+                    post._id,
+                    authData.sub ? authData.sub : null
+                  )
+                )
+              }
+            >
+              <DeleteIcon fontSize="small" /> Delete
+            </Button>
+          )}
       </CardActions>
     </Card>
   );

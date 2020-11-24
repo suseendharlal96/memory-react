@@ -1,4 +1,3 @@
-import { useHistory } from "react-router-dom";
 import { axiosClient } from "../../axios";
 import * as actionType from "./actionType";
 

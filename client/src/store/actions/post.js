@@ -54,28 +54,31 @@ export const updatePost = (id, formData) => async (dispatch) => {
   }
 };
 
-export const deletePost = (id) => async (dispatch) => {
+export const deletePost = (id, sub) => async (dispatch) => {
   try {
-    await axiosClient.delete(`/posts/deletePost/${id}`, {
-      headers: {
-        Authorization: `Bearer ${
-          localStorage.getItem("token") ? localStorage.getItem("token") : null
-        }`,
-      },
-    });
+    await axiosClient.patch(
+      `/posts/deletePost/${id}`,
+      { sub },
+      {
+        headers: {
+          Authorization: `Bearer ${
+            localStorage.getItem("token") ? localStorage.getItem("token") : null
+          }`,
+        },
+      }
+    );
     dispatch({ type: actionType.DELETE_SUCCESS, id });
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
-export const likePost = (id) => async (dispatch) => {
+export const likePost = (id, sub) => async (dispatch) => {
   const token = localStorage.getItem("token")
     ? localStorage.getItem("token")
     : null;
   try {
     const { data: updatedPost } = await axiosClient.patch(
       `/posts/likePost/${id}`,
-      null,
+      { sub },
       {
         headers: {
           Authorization: `Bearer ${token}`,

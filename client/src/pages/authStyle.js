@@ -28,11 +28,14 @@ export default makeStyles((theme) => ({
     margin: "10px 0",
   },
   buttonSubmit: {
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   wrapper: {
     margin: theme.spacing(1),
     position: "relative",
+    display:'flex',
+    justifyContent:'space-between',
+    marginBottom: 10,
   },
   buttonProgress: {
     color: green[500],
