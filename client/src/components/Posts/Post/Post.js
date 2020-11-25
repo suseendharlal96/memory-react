@@ -79,11 +79,7 @@ const Post = ({ post, setEditId }) => {
           <Button
             size="small"
             color="primary"
-            onClick={() =>
-              dispatch(
-                action.likePost(post._id, authData.sub ? authData.sub : null)
-              )
-            }
+            onClick={() => dispatch(action.likePost(post._id))}
           >
             {post.likes.length > 0 ? (
               post.likes.find(
@@ -125,14 +121,7 @@ const Post = ({ post, setEditId }) => {
             <Button
               size="small"
               color="secondary"
-              onClick={() =>
-                dispatch(
-                  action.deletePost(
-                    post._id,
-                    authData.sub ? authData.sub : null
-                  )
-                )
-              }
+              onClick={() => dispatch(action.deletePost(post._id))}
             >
               <DeleteIcon fontSize="small" /> Delete
             </Button>
