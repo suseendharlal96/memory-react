@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 dotenv.config();
-// const multer = require("multer");
 import AWS from "aws-sdk";
 import PostModal from "../models/Post.js";
 
