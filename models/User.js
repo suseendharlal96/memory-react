@@ -7,6 +7,7 @@ const userSchema = mongoose.Schema(
     profile: { type: String },
     s3Key: { type: String },
   },
+  // adds createdAt and updatedAt automatically
   { timestamps: true }
 );
 
