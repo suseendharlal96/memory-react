@@ -39,13 +39,32 @@ const PostForm = ({ editId, setEditId }) => {
   const clear = () => {
     setPostData({ title: "", name: "", message: "", tags: "", image: "" });
     setEditId(null);
+    document.getElementById("file-upload").value = null;
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    editPost
-      ? dispatch(action.updatePost(editId, postData))
-      : dispatch(action.createPost(postData));
+    const data = new FormData(e.target);
+    console.log(postData);
+    if (editPost) {
+      if (document.getElementById("file-upload").value) {
+        data.append("file", postData.image, { ...postData, editId });
+        dispatch(action.updatePost(editId, data));
+      } else {
+        dispatch(action.updatePostWithoutFile(editId, postData));
+      }
+    } else {
+      data.append("file", postData.image, postData);
+      dispatch(action.createPost(data));
+    }
+    console.log(postData);
     // clear();
+  };
+  const handleFile = (e) => {
+    e.preventDefault();
+    setPostData((prevState) => ({
+      ...prevState,
+      image: e.target.files[0],
+    }));
   };
   return (
     <Paper className={classes.paper}>
@@ -115,19 +134,20 @@ const PostForm = ({ editId, setEditId }) => {
         />
         <div className={classes.fileInput}>
           <Typography>Snapshot *</Typography>
-          <FileBase
+          <input type="file" id="file-upload" onChange={handleFile} />
+          {/* <FileBase
             type="file"
             multiple={false}
             onDone={({ base64 }) => setPostData({ ...postData, image: base64 })}
-          />
-          {postData && postData.image && (
+          /> */}
+          {/* {postData && postData.image && (
             <img
               src={postData.image}
               alt={postData.title}
               height="100px"
               width="100px"
             />
-          )}
+          )} */}
           {errors && errors?.image && (
             <Typography align="center" color="secondary">
               {errors && errors?.image}

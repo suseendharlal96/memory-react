@@ -7,6 +7,7 @@ const postSchema = mongoose.Schema({
   creator: { type: String, required: true },
   tags: { type: [String], required: true },
   image: { type: String, required: true },
+  s3Key: { type: String, required: true },
   likes: { type: [String], default: [] },
   createdAt: { type: Date, default: new Date().toISOString() },
 });
