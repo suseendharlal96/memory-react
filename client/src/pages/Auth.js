@@ -42,9 +42,16 @@ const Auth = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    isSignup
-      ? dispatch(action.signup(form, history))
-      : dispatch(action.signin(form, history));
+    isSignup ? signup(e) : dispatch(action.signin(form, history));
+  };
+  const signup = (e) => {
+    if (document.getElementById("profile-upload").value) {
+      const data = new FormData(e.target);
+      data.append("file", form.profile, form);
+      dispatch(action.signup(data, history));
+    } else {
+      dispatch(action.signupWithoutFile(form, history));
+    }
   };
   const handleClickShowPassword = () => {
     setIsShowPassword((prevState) => !prevState);
@@ -71,6 +78,10 @@ const Auth = () => {
   const googleError = (res) => {
     console.log(res);
     alert("Google signin was unsuccessful.Try again later");
+  };
+  const handleFile = (e) => {
+    e.preventDefault();
+    setForm({ ...form, profile: e.target.files[0] });
   };
   return (
     <form
@@ -197,11 +208,12 @@ const Auth = () => {
           </FormControl>
           <div className={classes.fileInput}>
             <Typography>Profile pic</Typography>
-            <FileBase
+            {/* <FileBase
               type="file"
               multiple={false}
               onDone={({ base64 }) => setForm({ ...form, profile: base64 })}
-            />
+            /> */}
+            <input type="file" id="profile-upload" onChange={handleFile} />
             {form && form.profile && (
               <img
                 src={form.profile}
