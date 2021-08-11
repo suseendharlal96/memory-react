@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Paper,
-  Typography,
-  TextField,
-  Button,
-  CircularProgress,
-} from "@material-ui/core";
+import { Paper, Typography, TextField, Button, CircularProgress } from "@material-ui/core";
 import FileBase from "react-file-base64";
 
 import useSusee from "./styles";
@@ -17,9 +11,7 @@ const PostForm = ({ editId, setEditId }) => {
   const loading = useSelector((state) => state.postReducer.creating);
   const posts = useSelector((state) => state.postReducer.posts);
   const errors = useSelector((state) => state.postReducer.errors);
-  const editPost = editId
-    ? posts && posts.length && posts.find((post) => post._id === editId)
-    : null;
+  const editPost = editId ? posts && posts.length && posts.find((post) => post._id === editId) : null;
   const [postData, setPostData] = useState({
     title: "",
     name: "",
@@ -67,16 +59,9 @@ const PostForm = ({ editId, setEditId }) => {
     }));
   };
   return (
-    <Paper className={classes.paper}>
-      <form
-        autoComplete="off"
-        noValidate
-        className={`${classes.root} ${classes.form}`}
-        onSubmit={handleSubmit}
-      >
-        <Typography variant="h6">
-          {editPost ? `Edit "${postData.title}"` : "Create your Memory"}
-        </Typography>
+    <Paper elevation={6} className={classes.paper}>
+      <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
+        <Typography variant="h6">{editPost ? `Edit "${postData.title}"` : "Create your Memory"}</Typography>
         {errors && errors?.message && (
           <Typography color="error" align="center" variant="h6">
             {errors?.message}
@@ -115,22 +100,18 @@ const PostForm = ({ editId, setEditId }) => {
           value={postData.message}
           error={errors && errors.messages ? true : false}
           helperText={errors && errors.messages ? errors?.messages : null}
-          onChange={(e) =>
-            setPostData({ ...postData, message: e.target.value })
-          }
+          onChange={(e) => setPostData({ ...postData, message: e.target.value })}
         />
         <TextField
           name="tags"
           required
           variant="outlined"
-          label="Tags (coma separated)"
+          label="Tags (comma separated)"
           fullWidth
           value={postData.tags}
           error={errors && errors.tags ? true : false}
           helperText={errors && errors.tags ? errors?.tags : null}
-          onChange={(e) =>
-            setPostData({ ...postData, tags: e.target.value.split(",") })
-          }
+          onChange={(e) => setPostData({ ...postData, tags: e.target.value.split(",") })}
         />
         <div className={classes.fileInput}>
           <Typography>Snapshot *</Typography>
@@ -155,29 +136,12 @@ const PostForm = ({ editId, setEditId }) => {
           )}
         </div>
         <div className={classes.wrapper}>
-          <Button
-            className={classes.buttonSubmit}
-            variant="contained"
-            color="primary"
-            size="large"
-            type="submit"
-            fullWidth
-            disabled={loading}
-          >
+          <Button className={classes.buttonSubmit} variant="contained" color="primary" size="large" type="submit" fullWidth disabled={loading}>
             Submit
           </Button>
-          {loading && (
-            <CircularProgress size={24} className={classes.buttonProgress} />
-          )}
+          {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
         </div>
-        <Button
-          variant="contained"
-          color="secondary"
-          size="small"
-          onClick={clear}
-          fullWidth
-          disabled={loading}
-        >
+        <Button variant="contained" color="secondary" size="small" onClick={clear} fullWidth disabled={loading}>
           Clear
         </Button>
       </form>

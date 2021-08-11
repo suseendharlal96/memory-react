@@ -4,6 +4,7 @@ export const AUTH_FAIL = "AUTH_FAIL";
 export const LOGOUT = "LOGOUT";
 
 export const GET_POSTS = "GET_POSTS";
+export const GET_SINGLE_POST_SUCCESS = "GET_SINGLE_POST_SUCCESS";
 export const GET_POSTS_SUCCESS = "GET_POSTS_SUCCESS";
 export const CREATE_POST = "CREATE_POST";
 export const CREATE_POST_SUCCESS = "CREATE_POST_SUCCESS";

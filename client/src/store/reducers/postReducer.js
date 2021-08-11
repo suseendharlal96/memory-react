@@ -15,7 +15,12 @@ const postReducer = (state = initState, action) => {
     case actionType.GET_POSTS_SUCCESS:
       // const actualPosts = [...state.posts];
       // actualPosts.unshift(action.posts);
-      return { ...state, posts: action.posts.reverse(), loading: false, errors: null };
+      console.log(action.posts);
+      return { ...state, posts: action.posts, currPage: action.currPage, total: action.total, loading: false, errors: null };
+
+    case actionType.GET_SINGLE_POST_SUCCESS:
+      console.log(action.post);
+      return { ...state, post: action.post, loading: false, errors: null };
 
     case actionType.CREATE_POST:
       return { ...state, creating: true, errors: null };
@@ -39,9 +44,7 @@ const postReducer = (state = initState, action) => {
 
     case actionType.UPDATE_SUCCESS:
       const postsClone = [...state.posts];
-      const index = postsClone.findIndex(
-        (post) => post._id === action.updatedPost._id
-      );
+      const index = postsClone.findIndex((post) => post._id === action.updatedPost._id);
       if (index !== -1) {
         postsClone[index] = action.updatedPost;
       }

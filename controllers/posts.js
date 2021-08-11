@@ -3,13 +3,43 @@ dotenv.config();
 import AWS from "aws-sdk";
 import PostModal from "../models/Post.js";
 
-export const getPosts = async (req, res) => {
+export const getPost = async (req, res) => {
+  const { id } = req.params;
   try {
-    const posts = await PostModal.find();
-    res.status(200).json(posts);
+    const post = await PostModal.findOne({ _id: id });
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+    console.log(err);
+  }
+};
+
+export const getPosts = async (req, res) => {
+  const { page } = req.query;
+  try {
+    const limit = 4;
+    const skip = (+page - 1) * limit;
+    const total = await PostModal.countDocuments({});
+    const posts = await PostModal.find().sort({ _id: -1 }).limit(limit).skip(skip);
+    res.status(200).json({ posts, currPage: +page, total: Math.ceil(total / limit) });
   } catch (error) {
     res.status(404).json({ message: error.message });
     console.log(error);
+  }
+};
+
+export const getPostsBySearch = async (req, res) => {
+  const { searchQuery, tags } = req.query;
+  console.log(searchQuery, tags);
+  try {
+    const title = new RegExp(searchQuery, "i");
+    console.log(title, tags.split(","));
+    const posts = await PostModal.find({ $or: [{ title }, { tags: { $in: tags.split(",") } }] });
+    console.log(posts)
+    res.status(200).json(posts);
+  } catch (err) {
+    console.log("ERROR", err);
+    res.status(404).json({ message: err.message });
   }
 };
 
@@ -161,7 +191,8 @@ export const updatePostWithoutFile = async (req, res) => {
   if (body.title.trim() === "") {
     return res.status(400).json({ title: "Required" });
   }
-  if (body.message.trim() === "") {``
+  if (body.message.trim() === "") {
+    ``;
     return res.status(400).json({ messages: "Required" });
   }
   if (body.tags.length === 0) {

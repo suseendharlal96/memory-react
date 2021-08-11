@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import AWS from 'aws-sdk'
+import AWS from "aws-sdk";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -23,18 +23,11 @@ export const signin = async (req, res) => {
     if (!oldUser) {
       return res.status(404).json({ message: "User doesn't exist" });
     }
-    const isPassCorrect = await bcrypt.compare(
-      req.body.password,
-      oldUser.password
-    );
+    const isPassCorrect = await bcrypt.compare(req.body.password, oldUser.password);
     if (!isPassCorrect) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-    const token = jwt.sign(
-      { email: oldUser.email, id: oldUser.id },
-      process.env.SECRET,
-      { expiresIn: "1h" }
-    );
+    const token = jwt.sign({ email: oldUser.email, id: oldUser.id }, process.env.SECRET, { expiresIn: "1h" });
     res.status(200).json({ result: oldUser, token });
   } catch (err) {
     res.status(500).json({ message: "Something went wrong" });
@@ -73,11 +66,7 @@ export const signupWithoutFile = async (req, res) => {
       password: hashedPassword,
       profile: req.body.profile,
     });
-    const token = jwt.sign(
-      { email: result.email, id: result.id },
-      process.env.SECRET,
-      { expiresIn: "1h" }
-    );
+    const token = jwt.sign({ email: result.email, id: result.id }, process.env.SECRET, { expiresIn: "1h" });
     res.status(201).json({ result, token });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
@@ -135,11 +124,7 @@ export const signup = async (req, res) => {
           profile: s3FileUrl + params.Key,
           s3Key: params.Key,
         });
-        const token = jwt.sign(
-          { email: result.email, id: result.id },
-          process.env.SECRET,
-          { expiresIn: "1h" }
-        );
+        const token = jwt.sign({ email: result.email, id: result.id }, process.env.SECRET, { expiresIn: "1h" });
         res.status(201).json({ result, token });
       }
     });

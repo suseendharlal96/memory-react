@@ -17,19 +17,9 @@ const Navbar = () => {
     history.push("/auth");
   };
   return (
-    <AppBar
-      className={classes.appBar}
-      position="static"
-      padding={3}
-      color="inherit"
-    >
+    <AppBar className={classes.appBar} position="static" padding={3} color="inherit">
       <Toolbar className={classes.toolbar}>
-        <Typography
-          onClick={() => history.push("/")}
-          variant="h6"
-          align="left"
-          className={classes.heading}
-        >
+        <Typography onClick={() => history.push("/")} variant="h6" align="left" className={classes.heading}>
           💖Memories💭
         </Typography>
         {/* <img src={memory} alt="memory" className={classes.image} height="60" /> */}
@@ -37,30 +27,15 @@ const Navbar = () => {
           <>
             <Avatar
               alt={authData.name ? authData.name : authData.email}
-              src={
-                authData.imageUrl
-                  ? authData.imageUrl
-                  : authData.profile
-                  ? authData.profile
-                  : defaultProfile
-              }
+              src={authData.imageUrl ? authData.imageUrl : authData.profile ? authData.profile : defaultProfile}
             />
             <Typography align="right">{authData.name ? authData.name : authData.email}</Typography>
-            <Button
-              variant="contained"
-              className={classes.logout}
-              color="secondary"
-              onClick={logout}
-            >
+            <Button variant="contained" className={classes.logout} color="secondary" onClick={logout}>
               Logout
             </Button>
           </>
         ) : (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => history.push("/auth")}
-          >
+          <Button variant="contained" color="primary" onClick={() => history.push("/auth")}>
             Signin
           </Button>
         )}
