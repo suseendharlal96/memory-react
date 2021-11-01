@@ -8,6 +8,7 @@ const postSchema = mongoose.Schema({
   tags: { type: [String], required: true },
   image: { type: String, required: true },
   s3Key: { type: String, required: true },
+  comments: { type: [String], default: [] },
   likes: { type: [String], default: [] },
   createdAt: { type: Date, default: new Date().toISOString() },
 });

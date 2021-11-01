@@ -7,6 +7,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import * as actions from "../../store/actions";
 import useStyles from "./styles.js";
+import PostComment from "./PostComment";
 
 const PostDetails = () => {
   dayjs.extend(relativeTime);
@@ -60,16 +61,25 @@ const PostDetails = () => {
           </Typography>
           <Typography variant="h6">
             Created by:
-            <Link to={`/creators/${post?.name}`} style={{ textDecoration: "none", color: "#3f51b5" }}>
+            <Link
+              to={`/creators/${post?.name}`}
+              style={{ textDecoration: "none", color: "#3f51b5" }}
+            >
               {` ${post?.name}`}
             </Link>
           </Typography>
           <Typography variant="body1">{dayjs(post?.createdAt).fromNow()}</Typography>
+          <Divider style={{ margin: "20px 0" }} />
+          <PostComment post={post} />
+          <Divider style={{ margin: "20px 0" }} />
         </div>
         <div className={classes.imageSection}>
           <img
             className={classes.media}
-            src={post?.image || "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"}
+            src={
+              post?.image ||
+              "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"
+            }
             alt={post?.title}
           />
         </div>
@@ -82,7 +92,11 @@ const PostDetails = () => {
           <Divider />
           <div className={classes.recommendedPosts}>
             {recommendedPosts.map(({ title, name, message, likes, image, _id }) => (
-              <div style={{ margin: "20px", cursor: "pointer" }} onClick={() => openDetails(_id)} key={_id}>
+              <div
+                style={{ margin: "20px", cursor: "pointer" }}
+                onClick={() => openDetails(_id)}
+                key={_id}
+              >
                 <Typography gutterBottom variant="h6">
                   {title}
                 </Typography>
@@ -103,7 +117,7 @@ const PostDetails = () => {
       )}
     </Paper>
   ) : (
-    <h2>sad</h2>
+    <h2>No details</h2>
   );
 };
 

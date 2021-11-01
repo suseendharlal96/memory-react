@@ -16,7 +16,14 @@ const postReducer = (state = initState, action) => {
       // const actualPosts = [...state.posts];
       // actualPosts.unshift(action.posts);
       console.log(action.posts);
-      return { ...state, posts: action.posts, currPage: action.currPage, total: action.total, loading: false, errors: null };
+      return {
+        ...state,
+        posts: action.posts,
+        currPage: action.currPage,
+        total: action.total,
+        loading: false,
+        errors: null,
+      };
 
     case actionType.GET_SINGLE_POST_SUCCESS:
       console.log(action.post);
@@ -65,6 +72,17 @@ const postReducer = (state = initState, action) => {
       return {
         ...state,
         posts: state.posts.filter((post) => post._id !== action.id),
+      };
+
+    case actionType.COMMENT_SUCCESS:
+      return {
+        ...state,
+        posts: state.posts.map((p) => {
+          if (p._id === action.id) {
+            return action.updatedPost;
+          }
+          return p;
+        }),
       };
 
     default:

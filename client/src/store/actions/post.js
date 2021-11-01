@@ -6,7 +6,12 @@ export const getPosts = (page) => async (dispatch) => {
   try {
     dispatch({ type: actionType.GET_POSTS });
     const { data: posts } = await axiosClient.get(`/posts?page=${page}`);
-    dispatch({ type: actionType.GET_POSTS_SUCCESS, posts: posts.posts, currPage: posts.currPage, total: posts.total });
+    dispatch({
+      type: actionType.GET_POSTS_SUCCESS,
+      posts: posts.posts,
+      currPage: posts.currPage,
+      total: posts.total,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -27,7 +32,9 @@ export const getPostsBySearch = (searchQuery) => async (dispatch) => {
   console.log(searchQuery);
   try {
     dispatch({ type: actionType.GET_POSTS });
-    const { data: posts } = await axiosClient.get(`/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${searchQuery.tags}`);
+    const { data: posts } = await axiosClient.get(
+      `/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${searchQuery.tags}`
+    );
     console.log(posts);
     dispatch({ type: actionType.GET_POSTS_SUCCESS, posts });
   } catch (err) {
@@ -41,7 +48,9 @@ export const createPost = (formData) => async (dispatch) => {
   try {
     const { data: post } = await axiosClient.post("/posts/createPost", formData, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token") ? localStorage.getItem("token") : null}`,
+        Authorization: `Bearer ${
+          localStorage.getItem("token") ? localStorage.getItem("token") : null
+        }`,
       },
     });
     dispatch({ type: actionType.CREATE_POST_SUCCESS, post });
@@ -58,7 +67,9 @@ export const updatePost = (id, formData) => async (dispatch) => {
   try {
     const { data: updatedPost } = await axiosClient.patch(`/posts/updatePost/${id}`, formData, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token") ? localStorage.getItem("token") : null}`,
+        Authorization: `Bearer ${
+          localStorage.getItem("token") ? localStorage.getItem("token") : null
+        }`,
       },
     });
     // if (updatedPost) {
@@ -73,11 +84,17 @@ export const updatePost = (id, formData) => async (dispatch) => {
 export const updatePostWithoutFile = (id, formData) => async (dispatch) => {
   dispatch({ type: actionType.CREATE_POST });
   try {
-    const { data: updatedPost } = await axiosClient.patch(`/posts/updatePostWithoutFile/${id}`, formData, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token") ? localStorage.getItem("token") : null}`,
-      },
-    });
+    const { data: updatedPost } = await axiosClient.patch(
+      `/posts/updatePostWithoutFile/${id}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${
+            localStorage.getItem("token") ? localStorage.getItem("token") : null
+          }`,
+        },
+      }
+    );
     dispatch({ type: actionType.UPDATE_SUCCESS, updatedPost });
   } catch (error) {
     dispatch({ type: actionType.UPDATE_FAIL, errors: error?.response?.data });
@@ -91,7 +108,9 @@ export const deletePost = (id, sub) => async (dispatch) => {
       { sub },
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token") ? localStorage.getItem("token") : null}`,
+          Authorization: `Bearer ${
+            localStorage.getItem("token") ? localStorage.getItem("token") : null
+          }`,
         },
       }
     );
@@ -112,6 +131,26 @@ export const likePost = (id, sub) => async (dispatch) => {
       }
     );
     dispatch({ type: actionType.UPDATE_SUCCESS, updatedPost });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const commentPost = (comment, id) => async (dispatch) => {
+  const token = localStorage.getItem("token") ? localStorage.getItem("token") : null;
+  try {
+    const { data: updatedPost } = await axiosClient.post(
+      `/posts/commentPost/${id}`,
+      { comment },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log(updatedPost);
+    dispatch({ type: actionType.COMMENT_SUCCESS, updatedPost, id });
+    return updatedPost.comments;
   } catch (error) {
     console.log(error);
   }

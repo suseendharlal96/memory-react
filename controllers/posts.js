@@ -35,7 +35,7 @@ export const getPostsBySearch = async (req, res) => {
     const title = new RegExp(searchQuery, "i");
     console.log(title, tags.split(","));
     const posts = await PostModal.find({ $or: [{ title }, { tags: { $in: tags.split(",") } }] });
-    console.log(posts)
+    console.log(posts);
     res.status(200).json(posts);
   } catch (err) {
     console.log("ERROR", err);
@@ -271,4 +271,17 @@ export const likePost = async (req, res) => {
   } catch (error) {
     res.json({ message: " like failed" });
   }
+};
+
+export const commentPost = async (req, res) => {
+  if (!req.userId) {
+    return res.json({ message: "Unauthenticated" });
+  }
+  const { id } = req.params;
+  const { comment } = req.body;
+  console.log(req.body)
+  const post = await PostModal.findById(id);
+  post.comments.push(comment);
+  const updatedPost = await PostModal.findByIdAndUpdate(id, post, { new: true });
+  res.json(updatedPost)
 };
