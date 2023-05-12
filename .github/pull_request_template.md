@@ -30,4 +30,4 @@ Please delete options that are not relevant.
 
 ## Additional context (if appropriate):
 
-[Custom](expand=1&custom.md)
+[Custom](expand=1&template=custom.md)
