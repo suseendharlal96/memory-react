@@ -24,7 +24,7 @@ Please delete options that are not relevant.
 - [ ] All new and existing tests passed.
 - [ ] My code builds clean without any errors or warnings.
 - [ ] I have tested this code locally and it works as expected.
-- [ ] I have added a comment in the code where necessary to explain complex logic.
+- [ ] I have added a comment in the code where necessary to explain complex logics.
 
 ## Screenshots (if appropriate):
 
